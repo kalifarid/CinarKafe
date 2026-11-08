@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="az" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÇİNAR Kafe & Lounge | Təsisçi: Süleymanova Səadət</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cinar: {
+                            gold: '#D4AF37',
+                            goldLight: '#F3E5AB',
+                            amber: '#E6A15C',
+                            dark: '#0A120E',
+                            card: '#121F18',
+                            emerald: '#162E21',
+                            accent: '#C59B27'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        cursive: ['Great Vibes', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0A120E;
+            color: #E2E8F0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow & Lighting */
+        .glow-amber {
+            box-shadow: 0 0 60px -5px rgba(230, 161, 92, 0.35);
+        }
+        .glow-gold {
+            box-shadow: 0 0 45px -5px rgba(212, 175, 55, 0.45);
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: rgba(18, 31, 24, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.035);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px 2px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Canvas Leaf Layer */
+        #leafCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FFF099 0%, #D4AF37 50%, #AA7C11 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Shimmer Animation */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .shimmer-btn {
+            background: linear-gradient(90deg, #D4AF37 0%, #FFF5C0 50%, #D4AF37 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        /* Gift Ribbon Unwrap FX */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.03); }
+        }
+        .gift-box-glow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A120E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #162E21;
+            border-radius: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen selection:bg-cinar-gold selection:text-cinar-dark">
+
+    <!-- Leaf Canvas Animation -->
+    <canvas id="leafCanvas"></canvas>
+
+    <!-- SURPRISE GIFT OVERLAY MODAL (Special Gift Reveal for Səadət) -->
+    <div id="giftModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-cinar-dark/95 backdrop-blur-2xl transition-all duration-700">
+        <div class="relative max-w-2xl w-full glass-panel p-8 sm:p-12 rounded-3xl border-2 border-cinar-gold/60 text-center space-y-6 shadow-2xl gift-box-glow overflow-hidden">
+            
+            <div class="absolute -top-24 -right-24 w-60 h-60 bg-cinar-gold/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-60 h-60 bg-emerald-700/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Gift Icon Badge -->
+            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-cinar-gold to-cinar-amber mx-auto flex items-center justify-center text-cinar-dark shadow-xl border-4 border-cinar-goldLight/50 transform hover:rotate-12 transition-transform">
+                <i class="fa-solid fa-gift text-4xl animate-bounce"></i>
+            </div>
+
+            <div class="space-y-2">
+                <span class="text-xs uppercase tracking-[0.3em] text-cinar-gold font-bold">Özəl Sürpriz Hədiyyə</span>
+                <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-white">Əziz Səadət! 🌿</h1>
+                <p class="font-cursive text-3xl text-cinar-gold">Xəyalındakı Çinar Kafe Artıq Bir Adım Yaxınlığındadır!</p>
+            </div>
+
+            <p class="text-gray-300 text-sm sm:text-base leading-relaxed font-light max-w-lg mx-auto">
+                Bu veb-sayt, sənin illərdir arzuladığın füsunkar **"ÇİNAR" Kafe & Lounge** konseptinin canlı və interaktiv layihəsidir. Yaşıl sarmaşıqlar, axar bulaq səs-küyü və fənər işıqları altında dostundan sənə hədiyyə!
+            </p>
+
+            <div class="pt-4">
+                <button onclick="unlockSurprise()" class="shimmer-btn px-10 py-5 rounded-2xl text-cinar-dark font-extrabold text-lg shadow-2xl hover:scale-105 transition-transform flex items-center justify-center gap-3 mx-auto border border-white/40">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                    <span>Sürprizi Aç və Kafeni Kəşf Et</span>
+                </button>
+            </div>
+
+            <p class="text-[11px] text-cinar-gold/70 tracking-wide uppercase font-semibold">Təsisçi: Süleymanova Səadət (099 748 09 39)</p>
+        </div>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="mainHeader">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 glass-panel mt-4 rounded-2xl px-6">
+                
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-full bg-cinar-emerald flex items-center justify-center border border-cinar-gold/40 group-hover:border-cinar-gold transition-all duration-300 shadow-md">
+                        <svg class="w-6 h-6 text-cinar-gold group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,2L13.5,6.5L18,4.5L16.5,9L21,10.5L17.5,13.5L20,18L15.5,16.5L14,21L12,17L10,21L8.5,16.5L4,18L6.5,13.5L3,10.5L7.5,9L6,4.5L10.5,6.5L12,2Z"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-serif text-2xl font-extrabold tracking-wider text-gold-gradient">ÇİNAR</span>
+                        <span class="text-[9px] uppercase tracking-[0.25em] text-emerald-300/80 -mt-1 font-semibold">Kafe & Lounge</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Links -->
+                <div class="hidden md:flex items-center space-x-7 text-sm font-medium">
+                    <a href="#about" class="text-gray-300 hover:text-cinar-gold transition-colors">Haqqımızda</a>
+                    <a href="#founder" class="text-gray-300 hover:text-cinar-gold transition-colors">Təsisçi</a>
+                    <a href="#map" class="text-cinar-gold font-semibold flex items-center gap-1.5"><i class="fa-solid fa-map-location-dot"></i> Interaktiv Xəritə</a>
+                    <a href="#menu" class="text-gray-300 hover:text-cinar-gold transition-colors">Menyu</a>
+                    <a href="#quiz" class="text-gray-300 hover:text-cinar-gold transition-colors">Əhval Testi</a>
+                    <a href="#wishes" class="text-gray-300 hover:text-cinar-gold transition-colors">Arzu Divarı</a>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3">
+                    <button id="audioBtn" title="Relaks Axar Su Və Kafe Səsi" class="p-2.5 rounded-xl bg-cinar-emerald/60 border border-cinar-gold/40 text-cinar-gold hover:bg-cinar-gold hover:text-cinar-dark transition-all flex items-center gap-2 text-xs font-semibold">
+                        <i class="fa-solid fa-volume-xmark text-sm" id="audioIcon"></i>
+                        <span class="hidden sm:inline">Ambiyans</span>
+                    </button>
+
+                    <a href="https://wa.me/994997480939?text=Salam%20S%C9%99ad%C9%99t%20xan%C4%B1m!%20%C3%87%C4%B0NAR%20Kafe-d%C9%99%20masa%20rezerv%20etm%C9%99k%20ist%C9%99yir%C9%99m." target="_blank" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-800 text-white font-medium text-xs sm:text-sm hover:brightness-110 shadow-lg flex items-center gap-2 border border-emerald-500/40">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span class="hidden lg:inline">099 748 09 39</span>
+                    </a>
+
+                    <button id="mobileMenuBtn" class="md:hidden p-2.5 rounded-xl bg-cinar-card text-gray-300 border border-white/10">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenu" class="hidden md:hidden glass-panel mx-4 mt-2 rounded-2xl p-6 flex flex-col gap-4 text-center">
+            <a href="#about" class="mobile-link text-gray-200 text-base py-1">Haqqımızda</a>
+            <a href="#founder" class="mobile-link text-cinar-gold text-base py-1 font-semibold">Təsisçi: Süleymanova Səadət</a>
+            <a href="#map" class="mobile-link text-gray-200 text-base py-1">Masa Xəritəsi</a>
+            <a href="#menu" class="mobile-link text-gray-200 text-base py-1">Menyu</a>
+            <a href="#quiz" class="mobile-link text-cinar-amber text-base py-1">Əhval Testi</a>
+            <a href="#wishes" class="mobile-link text-gray-200 text-base py-1">Arzu Divarı</a>
+            <a href="#reservation" class="mobile-link text-cinar-gold text-base py-1 font-bold">Rezervasiya</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-4 overflow-hidden">
+        <!-- Lights -->
+        <div class="absolute top-1/4 left-1/5 w-96 h-96 bg-emerald-900/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-1/3 right-1/4 w-96 h-96 bg-amber-700/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-20">
+            
+            <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-cinar-gold/40 text-cinar-gold text-xs uppercase tracking-widest font-semibold">
+                    <i class="fa-solid fa-leaf text-cinar-gold"></i> Süleymanova Səadət-in Xəyal Layihəsi
+                </div>
+
+                <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight">
+                    Sarmaşıqlı Kölgədə <br>
+                    <span class="text-gold-gradient">ÇİNAR Hüzuru</span>
+                </h1>
+
+                <p class="text-gray-300 text-base sm:text-lg max-w-2xl font-light leading-relaxed">
+                    Sakit axan arxın zümrüd suları, axşam fənərlərinin isti romantik işığı və əfsanəvi çinar kölgəsi. Şəhərin mərkəzində təbiətin və lüksün qovuşduğu ən gözəl məkan.
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#map" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cinar-gold to-cinar-amber text-cinar-dark font-extrabold hover:shadow-lg hover:shadow-cinar-gold/30 hover:scale-105 transition-all duration-300 flex items-center gap-3">
+                        <i class="fa-solid fa-map-marked-alt text-lg"></i>
+                        <span>İnteraktiv Masa Seçimi</span>
+                    </a>
+                    
+                    <a href="#quiz" class="px-8 py-4 rounded-xl glass-card text-cinar-gold border border-cinar-gold/40 hover:bg-cinar-gold/10 transition-all duration-300 flex items-center gap-3 font-semibold">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Sürpriz Əhval Testi</span>
+                    </a>
+                </div>
+
+                <div class="pt-8 grid grid-cols-3 gap-4 border-t border-white/10 max-w-lg mx-auto lg:mx-0">
+                    <div class="text-center lg:text-left">
+                        <p class="font-serif text-2xl font-bold text-cinar-gold">Bulaq Kənarı</p>
+                        <p class="text-xs text-gray-400 mt-1">Canlı Axar Su</p>
+                    </div>
+                    <div class="text-center lg:text-left">
+                        <p class="font-serif text-2xl font-bold text-cinar-gold">Vip Zal</p>
+                        <p class="text-xs text-gray-400 mt-1">İsti Fənər İşıqları</p>
+                    </div>
+                    <div class="text-center lg:text-left">
+                        <p class="font-serif text-2xl font-bold text-cinar-gold">100%</p>
+                        <p class="text-xs text-gray-400 mt-1">Ekoloji Atmosfer</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Visual Frame Matching User Image Concept -->
+            <div class="lg:col-span-5 relative">
+                <div class="relative rounded-3xl overflow-hidden p-2 glass-panel border border-cinar-gold/40 shadow-2xl group">
+                    <div class="relative h-[480px] w-full rounded-2xl overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1000" alt="ÇİNAR Cafe Concept" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cinar-dark via-cinar-dark/30 to-transparent"></div>
+                        
+                        <div class="absolute top-4 right-4 glass-panel px-4 py-2 rounded-full border border-cinar-gold/40 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-cinar-gold text-xs"></i>
+                            <span class="text-xs font-bold text-white">Xəyal Layihə</span>
+                        </div>
+
+                        <div class="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass-panel border border-white/15">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-serif font-bold text-lg text-white">ÇİNAR Teras & Su Arxı</h4>
+                                    <p class="text-xs text-cinar-gold font-medium">Təsisçi: Süleymanova Səadət</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-cinar-gold/20 flex items-center justify-center text-cinar-gold border border-cinar-gold/50">
+                                    <i class="fa-solid fa-water"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: FOUNDER SPOTLIGHT -->
+    <section id="founder" class="py-24 relative bg-cinar-card/60 border-y border-white/5">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-5">
+                    <div class="relative">
+                        <div class="w-full h-[420px] rounded-3xl overflow-hidden glass-panel p-3 border border-cinar-gold/40 shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800" alt="Süleymanova Səadət" class="w-full h-full object-cover rounded-2xl filter brightness-105 contrast-105">
+                        </div>
+                        <div class="absolute -bottom-6 -right-2 sm:right-6 glass-panel px-6 py-4 rounded-2xl border border-cinar-gold/50 shadow-2xl bg-cinar-dark/90">
+                            <p class="text-xs uppercase tracking-widest text-cinar-gold font-extrabold">Təsisçi & İdeya Müəllifi</p>
+                            <h3 class="font-serif text-2xl font-bold text-white mt-0.5">Süleymanova Səadət</h3>
+                            <p class="text-xs text-emerald-400 flex items-center gap-1.5 mt-1">
+                                <i class="fa-solid fa-phone text-cinar-gold"></i> 099 748 09 39 (WhatsApp)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 space-y-6 lg:pl-6">
+                    <div class="inline-block px-3.5 py-1.5 rounded-full bg-cinar-gold/10 border border-cinar-gold/40 text-cinar-gold text-xs uppercase tracking-wider font-bold">
+                        Gələcəyin Ən Gözəl Kafesi
+                    </div>
+                    
+                    <h2 class="font-serif text-3xl sm:text-5xl font-extrabold leading-tight">
+                        "Çinar ağacının kölgəsi qədər köklü, su süzültüsü qədər <span class="text-gold-gradient">hüzurlu</span> bir məkan."
+                    </h2>
+
+                    <p class="text-gray-300 leading-relaxed font-light text-base">
+                        Səadət xanımın illərdir qəlbində böyütdüyü bu möhtəşəm ideya — qonaqların şəhərin təlaşından uzaqlaşıb təbiət, yüksək keyfiyyətli kofe və xüsusi desertlərdən həzz alacağı lüks bir məkandır.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div class="p-4 rounded-2xl glass-card border border-white/10">
+                            <i class="fa-solid fa-crown text-cinar-gold text-2xl mb-2"></i>
+                            <h4 class="font-serif font-bold text-white">Qüsursuz Konsept</h4>
+                            <p class="text-xs text-gray-400 mt-1">Vintaj ağac teksturası və sarmaşıqlı canlı teras.</p>
+                        </div>
+                        <div class="p-4 rounded-2xl glass-card border border-white/10">
+                            <i class="fa-solid fa-heart text-cinar-amber text-2xl mb-2"></i>
+                            <h4 class="font-serif font-bold text-white">Səmimi Ev Hüzuru</h4>
+                            <p class="text-xs text-gray-400 mt-1">Səadət xanımın yüksək estetika və qonaqpərvərlik baxışı.</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <a href="https://wa.me/994997480939?text=Salam%20S%C9%99ad%C9%99t%20xan%C4%B1m!%20Sayt%20s%C3%BCrprizini%20g%C3%B6rd%C3%BCm%2C%20t%C9%99brikl%C9%99r!" target="_blank" class="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm inline-flex items-center gap-3 shadow-lg transition-all">
+                            <i class="fa-brands fa-whatsapp text-xl"></i> Səadət Xanımla Əlaqə Saxla
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: INTERACTIVE CAFE TABLE MAP -->
+    <section id="map" class="py-24 relative">
+        <div class="max-w-6xl mx-auto px-4">
+            
+            <div class="text-center space-y-3 mb-12">
+                <span class="px-4 py-1.5 rounded-full glass-panel text-cinar-gold text-xs uppercase tracking-widest font-semibold border border-cinar-gold/40">İnteraktiv Xəritə</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold">Masa və Zona Seçimi</h2>
+                <p class="text-gray-400 text-sm max-w-xl mx-auto">Aşağıdakı zonaya klikləyərək xəyalınızdakı masanı seçin və dərhal rezerv edin!</p>
+            </div>
+
+            <!-- Map Graphic Container -->
+            <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-cinar-gold/30 shadow-2xl relative overflow-hidden">
+                
+                <!-- Water Stream Visual Strip -->
+                <div class="w-full h-12 bg-gradient-to-r from-cyan-900/40 via-cyan-600/30 to-cyan-900/40 rounded-xl mb-8 border border-cyan-500/30 flex items-center justify-center gap-3 text-cyan-300 font-semibold text-xs tracking-widest">
+                    <i class="fa-solid fa-water animate-pulse"></i> CANLI AXAR SU ARXI (WATER STREAM ZONE) <i class="fa-solid fa-water animate-pulse"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Zone 1: Water Stream Tables -->
+                    <div class="p-5 rounded-2xl glass-card border border-cyan-500/30 hover:border-cyan-400 transition-all space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-serif font-bold text-white text-lg flex items-center gap-2"><i class="fa-solid fa-droplet text-cyan-400"></i> Bulaq Kənarı</h4>
+                            <span class="text-[10px] bg-cyan-900/60 text-cyan-300 px-2.5 py-1 rounded-full font-bold">Açıq Hava</span>
+                        </div>
+                        <p class="text-xs text-gray-300">Su şırıltısı fonunda sakit romantik masalar.</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <button onclick="selectMapTable('Masa #01 (Su Kənarı - 2 Nəfərlik)')" class="p-3 rounded-xl bg-cinar-dark/80 border border-white/10 hover:border-cinar-gold text-center text-xs font-bold text-gray-200 hover:text-cinar-gold transition-all">
+                                Masa #01 <br><span class="text-[10px] text-gray-400">2 Nəfərlik</span>
+                            </button>
+                            <button onclick="selectMapTable('Masa #02 (Su Kənarı - 4 Nəfərlik)')" class="p-3 rounded-xl bg-cinar-dark/80 border border-white/10 hover:border-cinar-gold text-center text-xs font-bold text-gray-200 hover:text-cinar-gold transition-all">
+                                Masa #02 <br><span class="text-[10px] text-gray-400">4 Nəfərlik</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Zone 2: Garden Terrace -->
+                    <div class="p-5 rounded-2xl glass-card border border-emerald-500/30 hover:border-emerald-400 transition-all space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-serif font-bold text-white text-lg flex items-center gap-2"><i class="fa-solid fa-tree text-emerald-400"></i> Çınar Terası</h4>
+                            <span class="text-[10px] bg-emerald-900/60 text-emerald-300 px-2.5 py-1 rounded-full font-bold">Sarmaşıqlı</span>
+                        </div>
+                        <p class="text-xs text-gray-300">Nəhəng çinar ağacının kölgəsində yaşıl vahə.</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <button onclick="selectMapTable('Masa #03 (Teras - 4 Nəfərlik)')" class="p-3 rounded-xl bg-cinar-dark/80 border border-white/10 hover:border-cinar-gold text-center text-xs font-bold text-gray-200 hover:text-cinar-gold transition-all">
+                                Masa #03 <br><span class="text-[10px] text-gray-400">4 Nəfərlik</span>
+                            </button>
+                            <button onclick="selectMapTable('Masa #04 (Teras VIP - 6 Nəfərlik)')" class="p-3 rounded-xl bg-cinar-dark/80 border border-white/10 hover:border-cinar-gold text-center text-xs font-bold text-gray-200 hover:text-cinar-gold transition-all">
+                                Masa #04 <br><span class="text-[10px] text-gray-400">6 Nəfərlik</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Zone 3: Indoor VIP Lounge -->
+                    <div class="p-5 rounded-2xl glass-card border border-amber-500/30 hover:border-amber-400 transition-all space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-serif font-bold text-white text-lg flex items-center gap-2"><i class="fa-solid fa-couch text-amber-400"></i> İçəri VIP Lounge</h4>
+                            <span class="text-[10px] bg-amber-900/60 text-amber-300 px-2.5 py-1 rounded-full font-bold">Fənər İşıqlı</span>
+                        </div>
+                        <p class="text-xs text-gray-300">Vintaj kərpiç divarlar və yumşaq mebellər.</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <button onclick="selectMapTable('Masa #05 (VIP Lounge - 4 Nəfərlik)')" class="p-3 rounded-xl bg-cinar-dark/80 border border-white/10 hover:border-cinar-gold text-center text-xs font-bold text-gray-200 hover:text-cinar-gold transition-all">
+                                Masa #05 <br><span class="text-[10px] text-gray-400">4 Nəfərlik</span>
+                            </button>
+                            <button onclick="selectMapTable('Masa #06 (VIP Divanlı - 8 Nəfərlik)')" class="p-3 rounded-xl bg-cinar-dark/80 border border-white/10 hover:border-cinar-gold text-center text-xs font-bold text-gray-200 hover:text-cinar-gold transition-all">
+                                Masa #06 <br><span class="text-[10px] text-gray-400">8 Nəfərlik</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: INTERACTIVE MOOD QUIZ -->
+    <section id="quiz" class="py-24 relative bg-cinar-card/40">
+        <div class="max-w-4xl mx-auto px-4">
+            
+            <div class="text-center space-y-3 mb-12">
+                <span class="px-4 py-1.5 rounded-full bg-cinar-amber/10 border border-cinar-amber/30 text-cinar-amber text-xs uppercase tracking-widest font-semibold">Qərarsız Qalmayın</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold">Əhvalınıza Uyğun İdeal Seçim</h2>
+                <p class="text-gray-400 text-sm max-w-xl mx-auto">3 suala cavab verin, Süleymanova Səadət tərəfindən sizin üçün təyin olunmuş imzalı deserti kəşf edin!</p>
+            </div>
+
+            <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-cinar-gold/40 shadow-2xl relative min-h-[360px] flex flex-col justify-center">
+                
+                <!-- Step 1 -->
+                <div id="quizStep1" class="quiz-step space-y-6">
+                    <h3 class="font-serif text-xl sm:text-2xl text-center text-cinar-gold font-bold">1. Hal-hazırda əhvalınız necədir?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                        <button onclick="selectQuiz(1, 'energetic')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-bolt text-3xl text-amber-400 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Enerjili & Aktiv</h4>
+                            <p class="text-xs text-gray-400 mt-1">Yeni Dadlar Axtarışında</p>
+                        </button>
+                        <button onclick="selectQuiz(1, 'relaxed')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-spa text-3xl text-emerald-400 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Sakit & Relaks</h4>
+                            <p class="text-xs text-gray-400 mt-1">Dincəlmək İstəyirəm</p>
+                        </button>
+                        <button onclick="selectQuiz(1, 'romantic')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-heart text-3xl text-rose-400 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Romantik</h4>
+                            <p class="text-xs text-gray-400 mt-1">Xüsusi Bir Görüş Üçün</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div id="quizStep2" class="quiz-step hidden space-y-6">
+                    <h3 class="font-serif text-xl sm:text-2xl text-center text-cinar-gold font-bold">2. Hansı aromanı üstün tutursunuz?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                        <button onclick="selectQuiz(2, 'sweet')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-cookie-bite text-3xl text-yellow-500 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Karamel & Şokolad</h4>
+                            <p class="text-xs text-gray-400 mt-1">Zəngin şirinlik</p>
+                        </button>
+                        <button onclick="selectQuiz(2, 'fruity')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-lemon text-3xl text-green-400 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Təzə Meyvəli</h4>
+                            <p class="text-xs text-gray-400 mt-1">Yüngül və təravətli</p>
+                        </button>
+                        <button onclick="selectQuiz(2, 'coffee')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-mug-saucer text-3xl text-amber-600 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Tünd Qəhvə Aroması</h4>
+                            <p class="text-xs text-gray-400 mt-1">Klassik espresso dadı</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div id="quizStep3" class="quiz-step hidden space-y-6">
+                    <h3 class="font-serif text-xl sm:text-2xl text-center text-cinar-gold font-bold">3. Kafedə üstünlük verdiyiniz mühit?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                        <button onclick="finishQuiz('water')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-water text-3xl text-cyan-400 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Su Arxı Yanı</h4>
+                            <p class="text-xs text-gray-400 mt-1">Sərinlik və su səsi</p>
+                        </button>
+                        <button onclick="finishQuiz('terrace')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-tree text-3xl text-emerald-500 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Çinar Kölgəsi</h4>
+                            <p class="text-xs text-gray-400 mt-1">Açıq təbiət terası</p>
+                        </button>
+                        <button onclick="finishQuiz('indoor')" class="p-5 rounded-2xl glass-card text-center hover:border-cinar-gold group transition-all">
+                            <i class="fa-solid fa-couch text-3xl text-amber-400 mb-3 group-hover:scale-125 transition-transform"></i>
+                            <h4 class="font-bold text-white">Vintaj Zal</h4>
+                            <p class="text-xs text-gray-400 mt-1">İsti fənər işıqları</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result Screen -->
+                <div id="quizResult" class="quiz-step hidden text-center space-y-6">
+                    <div class="w-16 h-16 rounded-full bg-cinar-gold/20 text-cinar-gold flex items-center justify-center mx-auto text-2xl border border-cinar-gold/60">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-cinar-gold font-extrabold">Sizin İdeal Təkliyinə</span>
+                        <h3 id="resultTitle" class="font-serif text-2xl sm:text-3xl font-bold text-white mt-1">Çinar Qızılı Latte & San Sebastian</h3>
+                        <p id="resultDesc" class="text-gray-300 text-sm max-w-lg mx-auto mt-2">Bu kombinasiya tam sizin əhvalınız üçün seçildi!</p>
+                    </div>
+
+                    <div class="pt-4 flex flex-wrap justify-center gap-4">
+                        <button onclick="resetQuiz()" class="px-5 py-2.5 rounded-xl border border-white/20 text-xs text-gray-300 hover:bg-white/10">Yenidən Sına</button>
+                        <a id="quizWaBtn" href="#" target="_blank" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cinar-gold to-cinar-amber text-cinar-dark font-extrabold text-sm flex items-center gap-2 hover:scale-105 transition-all">
+                            <i class="fa-brands fa-whatsapp"></i> Sifariş Et / Rezerv Et
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: DREAM VISION BOARD / WISH WALL -->
+    <section id="wishes" class="py-24 relative">
+        <div class="max-w-6xl mx-auto px-4">
+            
+            <div class="text-center space-y-3 mb-12">
+                <span class="px-4 py-1.5 rounded-full glass-panel text-cinar-gold text-xs uppercase tracking-widest font-semibold border border-cinar-gold/40">İnteraktiv Bölmə</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold">ÇİNAR Kafe Arzu Divarı</h2>
+                <p class="text-gray-400 text-sm max-w-xl mx-auto">Səadət xanımın xəyal kafesi üçün öz arzunuzu və təbrikinizi bura qeyd edin!</p>
+            </div>
+
+            <!-- Input Box for New Wish -->
+            <div class="max-w-xl mx-auto glass-panel p-4 rounded-2xl border border-cinar-gold/30 mb-10 flex gap-3">
+                <input type="text" id="wishInput" placeholder="Səadət üçün arzunu yaz... (Məs: Uğurlar, Çinar Kafe Bakının ən gözəl məkanı olsun!)" class="w-full px-4 py-2.5 rounded-xl bg-cinar-dark/80 text-white text-xs border border-white/10 focus:outline-none focus:border-cinar-gold">
+                <button onclick="addWish()" class="px-5 py-2.5 rounded-xl bg-cinar-gold text-cinar-dark font-bold text-xs hover:bg-cinar-amber transition-all whitespace-nowrap">
+                    Arzu Əlavə Et
+                </button>
+            </div>
+
+            <!-- Wish Wall Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="wishContainer">
+                
+                <div class="glass-card p-6 rounded-2xl border border-cinar-gold/30 space-y-3 relative overflow-hidden">
+                    <div class="flex items-center justify-between text-cinar-gold">
+                        <span class="text-xs font-bold uppercase tracking-wider">Əziz Dostundan</span>
+                        <i class="fa-solid fa-heart text-rose-500"></i>
+                    </div>
+                    <p class="text-gray-200 text-sm italic font-light">"Səadət, xəyalındakı Çinar Kafenin açılış günündə ilk çayı birlikdə içmək arzusu ilə! Sənə sonsuz uğurlar!"</p>
+                    <div class="text-[10px] text-gray-400 font-semibold">— Sürpriz Hədiyyə Müəllifi</div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
+                    <div class="flex items-center justify-between text-cinar-amber">
+                        <span class="text-xs font-bold uppercase tracking-wider">Qonaq Arzusu</span>
+                        <i class="fa-solid fa-star text-cinar-gold"></i>
+                    </div>
+                    <p class="text-gray-200 text-sm italic font-light">"Su arxı kənarında kofe içmək üçün səbirsizliklə açılışı gözləyirik! Uğurlar Səadət xanım!"</p>
+                    <div class="text-[10px] text-gray-400 font-semibold">— Arzu Edən Qonaq</div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
+                    <div class="flex items-center justify-between text-emerald-400">
+                        <span class="text-xs font-bold uppercase tracking-wider">Çinar Vahəsi</span>
+                        <i class="fa-solid fa-leaf text-emerald-400"></i>
+                    </div>
+                    <p class="text-gray-200 text-sm italic font-light">"Şəhərin ən hüzurlu və estetik məkanı olacağına əminik. Xəyalların gerçəkləşsin!"</p>
+                    <div class="text-[10px] text-gray-400 font-semibold">— Çinar Sevərlər</div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: FILTERABLE MENU -->
+    <section id="menu" class="py-24 relative bg-cinar-card/50">
+        <div class="max-w-7xl mx-auto px-4">
+            
+            <div class="text-center space-y-3 mb-12">
+                <span class="px-4 py-1.5 rounded-full glass-panel text-cinar-gold text-xs uppercase tracking-widest font-semibold border border-cinar-gold/30">Lüks Təamlar</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold">ÇİNAR İmzalı Menyu</h2>
+                
+                <div class="flex flex-wrap justify-center gap-3 pt-6" id="menuTabs">
+                    <button onclick="filterMenu('all')" class="menu-tab px-6 py-2.5 rounded-full text-xs font-bold transition-all bg-cinar-gold text-cinar-dark active">Hamısı</button>
+                    <button onclick="filterMenu('coffee')" class="menu-tab px-6 py-2.5 rounded-full text-xs font-bold transition-all glass-panel text-gray-300 hover:text-cinar-gold">Xüsusi Qəhvələr</button>
+                    <button onclick="filterMenu('dessert')" class="menu-tab px-6 py-2.5 rounded-full text-xs font-bold transition-all glass-panel text-gray-300 hover:text-cinar-gold">Desertlər</button>
+                    <button onclick="filterMenu('signature')" class="menu-tab px-6 py-2.5 rounded-full text-xs font-bold transition-all glass-panel text-gray-300 hover:text-cinar-gold">Çınar İmzalı</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="menu-item coffee glass-card rounded-2xl overflow-hidden p-4 group">
+                    <div class="h-48 rounded-xl overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&q=80&w=600" alt="Çınar Qızılı Latte" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-3 right-3 glass-panel px-3 py-1 rounded-full text-xs font-bold text-cinar-gold">İmzalı</span>
+                    </div>
+                    <div class="pt-4 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-serif font-bold text-lg text-white">Çınar Qızılı Latte</h3>
+                            <span class="text-cinar-gold font-bold font-serif">8.50 AZN</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Xüsusi darçın və organik karamel aromalı espresso.</p>
+                    </div>
+                </div>
+
+                <div class="menu-item dessert glass-card rounded-2xl overflow-hidden p-4 group">
+                    <div class="h-48 rounded-xl overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=600" alt="San Sebastian" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="pt-4 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-serif font-bold text-lg text-white">San Sebastian Cheesecake</h3>
+                            <span class="text-cinar-gold font-bold font-serif">9.00 AZN</span>
+                        </div>
+                        <p class="text-xs text-gray-400">İsti belçika şokolad sosu ilə sunulan əfsanəvi desert.</p>
+                    </div>
+                </div>
+
+                <div class="menu-item signature glass-card rounded-2xl overflow-hidden p-4 group">
+                    <div class="h-48 rounded-xl overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&q=80&w=600" alt="Təbiət Çayı" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-3 right-3 glass-panel px-3 py-1 rounded-full text-xs font-bold text-cinar-amber">Ən Çox Seçilən</span>
+                    </div>
+                    <div class="pt-4 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-serif font-bold text-lg text-white">Dağ Otları Çay Dəsti</h3>
+                            <span class="text-cinar-gold font-bold font-serif">12.00 AZN</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Kəklikotu, nanə və təbii bal ilə verilən Çınar çayı.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: DIRECT WHATSAPP RESERVATION FORM -->
+    <section id="reservation" class="py-24 relative">
+        <div class="max-w-4xl mx-auto px-4">
+            
+            <div class="glass-panel p-8 sm:p-12 rounded-3xl border border-cinar-gold/40 shadow-2xl relative">
+                
+                <div class="text-center space-y-3 mb-8">
+                    <span class="text-xs uppercase tracking-widest text-cinar-gold font-extrabold">Süleymanova Səadət üçün</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold">Masa Rezervasiya Formu</h2>
+                    <p class="text-gray-300 text-sm">Seçdiyiniz masa məlumatı dərhal WhatsApp-a yönləndiriləcəkdir.</p>
+                </div>
+
+                <form id="resForm" onsubmit="handleReservation(event)" class="space-y-6">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs text-gray-300 uppercase font-semibold mb-2">Ad və Soyadınız</label>
+                            <input type="text" id="resName" required placeholder="Aysel Məmmədova" class="w-full px-4 py-3 rounded-xl bg-cinar-dark/90 border border-white/10 text-white focus:border-cinar-gold focus:outline-none transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-300 uppercase font-semibold mb-2">Əlaqə Nömrəniz</label>
+                            <input type="tel" id="resPhone" required placeholder="050 000 00 00" class="w-full px-4 py-3 rounded-xl bg-cinar-dark/90 border border-white/10 text-white focus:border-cinar-gold focus:outline-none transition-all text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-xs text-gray-300 uppercase font-semibold mb-2">Tarix</label>
+                            <input type="date" id="resDate" required class="w-full px-4 py-3 rounded-xl bg-cinar-dark/90 border border-white/10 text-white focus:border-cinar-gold focus:outline-none transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-300 uppercase font-semibold mb-2">Saat</label>
+                            <input type="time" id="resTime" required class="w-full px-4 py-3 rounded-xl bg-cinar-dark/90 border border-white/10 text-white focus:border-cinar-gold focus:outline-none transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-300 uppercase font-semibold mb-2">Seçilmiş Masa / Zona</label>
+                            <input type="text" id="resSelectedTable" readonly value="Bulaq Kənarı (Masa #01)" class="w-full px-4 py-3 rounded-xl bg-cinar-dark/90 border border-cinar-gold/50 text-cinar-gold font-bold text-sm focus:outline-none">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 via-cinar-gold to-cinar-amber text-cinar-dark font-extrabold text-base hover:brightness-110 shadow-xl transition-all flex items-center justify-center gap-3">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
+                        <span>WhatsApp ilə Rezervasiyanı Göndər (099 748 09 39)</span>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 border-t border-white/10 bg-cinar-dark relative z-20">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-6">
+            
+            <div class="flex items-center justify-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-cinar-emerald flex items-center justify-center border border-cinar-gold/40">
+                    <svg class="w-5 h-5 text-cinar-gold" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,2L13.5,6.5L18,4.5L16.5,9L21,10.5L17.5,13.5L20,18L15.5,16.5L14,21L12,17L10,21L8.5,16.5L4,18L6.5,13.5L3,10.5L7.5,9L6,4.5L10.5,6.5L12,2Z"/>
+                    </svg>
+                </div>
+                <span class="font-serif text-2xl font-bold text-gold-gradient">ÇİNAR KAFE & LOUNGE</span>
+            </div>
+
+            <p class="text-xs text-gray-300">
+                Təsisçi və İdeya Müəllifi: <strong class="text-cinar-gold">Süleymanova Səadət</strong> | Əlaqə: <a href="https://wa.me/994997480939" target="_blank" class="hover:underline text-cinar-gold font-bold">099 748 09 39</a>
+            </p>
+
+            <p class="text-[11px] text-gray-500">© 2026 ÇİNAR Kafe. Səadət üçün xüsusi olaraq hazırlanmış hədiyyəlik interaktiv təqdimat saytı.</p>
+        </div>
+    </footer>
+
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        /* -------------------------------------------------------------
+           1. UNLOCK SURPRISE GIFT MODAL & CONFETTI
+        ------------------------------------------------------------- */
+        function unlockSurprise() {
+            const modal = document.getElementById('giftModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            
+            // Fire confetti burst
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#D4AF37', '#E6A15C', '#162E21', '#FFF5C0']
+                });
+            }
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 700);
+        }
+
+        /* -------------------------------------------------------------
+           2. FALLING LEAVES CANVAS ANIMATION
+        ------------------------------------------------------------- */
+        const canvas = document.getElementById('leafCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const leaves = [];
+        const leafColors = ['rgba(212, 175, 55, 0.65)', 'rgba(230, 161, 92, 0.55)', 'rgba(22, 46, 33, 0.45)', 'rgba(243, 229, 171, 0.7)'];
+
+        class Leaf {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.2 + 0.6;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.03;
+                this.color = leafColors[Math.floor(Math.random() * leafColors.length)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotSpeed;
+
+                if (this.y > canvas.height + 30) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.fillStyle = this.color;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size);
+                ctx.lineTo(this.size * 0.4, -this.size * 0.4);
+                ctx.lineTo(this.size, -this.size * 0.2);
+                ctx.lineTo(this.size * 0.5, this.size * 0.3);
+                ctx.lineTo(this.size * 0.7, this.size * 0.9);
+                ctx.lineTo(0, this.size * 0.5);
+                ctx.lineTo(-this.size * 0.7, this.size * 0.9);
+                ctx.lineTo(-this.size * 0.5, this.size * 0.3);
+                ctx.lineTo(-this.size, -this.size * 0.2);
+                ctx.lineTo(-this.size * 0.4, -this.size * 0.4);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 28; i++) {
+            leaves.push(new Leaf());
+        }
+
+        function animateLeaves() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            leaves.forEach(leaf => {
+                leaf.update();
+                leaf.draw();
+            });
+            requestAnimationFrame(animateLeaves);
+        }
+        animateLeaves();
+
+        /* -------------------------------------------------------------
+           3. MAP TABLE SELECTION
+        ------------------------------------------------------------- */
+        function selectMapTable(tableName) {
+            document.getElementById('resSelectedTable').value = tableName;
+            const resSection = document.getElementById('reservation');
+            resSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* -------------------------------------------------------------
+           4. WISH WALL INTERACTION
+        ------------------------------------------------------------- */
+        function addWish() {
+            const input = document.getElementById('wishInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const container = document.getElementById('wishContainer');
+            const card = document.createElement('div');
+            card.className = "glass-card p-6 rounded-2xl border border-cinar-gold/50 space-y-3 animate-fade-in";
+            card.innerHTML = `
+                <div class="flex items-center justify-between text-cinar-gold">
+                    <span class="text-xs font-bold uppercase tracking-wider">Yeni Arzu</span>
+                    <i class="fa-solid fa-sparkles text-cinar-gold"></i>
+                </div>
+                <p class="text-gray-200 text-sm italic font-light">"${val}"</p>
+                <div class="text-[10px] text-gray-400 font-semibold">— Kafenin Hörmətli Qonağı</div>
+            `;
+            container.prepend(card);
+            input.value = '';
+
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 } });
+            }
+        }
+
+        /* -------------------------------------------------------------
+           5. QUIZ LOGIC
+        ------------------------------------------------------------- */
+        let quizState = { step1: '', step2: '', step3: '' };
+
+        function selectQuiz(step, value) {
+            if (step === 1) {
+                quizState.step1 = value;
+                document.getElementById('quizStep1').classList.add('hidden');
+                document.getElementById('quizStep2').classList.remove('hidden');
+            } else if (step === 2) {
+                quizState.step2 = value;
+                document.getElementById('quizStep2').classList.add('hidden');
+                document.getElementById('quizStep3').classList.remove('hidden');
+            }
+        }
+
+        function finishQuiz(areaValue) {
+            quizState.step3 = areaValue;
+            document.getElementById('quizStep3').classList.add('hidden');
+            
+            const resultDiv = document.getElementById('quizResult');
+            const titleEl = document.getElementById('resultTitle');
+            const descEl = document.getElementById('resultDesc');
+            const waBtn = document.getElementById('quizWaBtn');
+
+            let rec = "Çınar Qızılı Latte & San Sebastian";
+            let desc = "Bulaq səs-küyündə dadmaq üçün Səadət xanım tərəfindən seçilmiş lüks təkliyiniz.";
+
+            if (quizState.step2 === 'fruity') {
+                rec = "Zümrüd Mokteyli & Meyvəli Tart";
+                desc = "Təzə nanə və giləmeyvə aromaları ilə gününüzə təravət kənarı qatın.";
+            } else if (quizState.step2 === 'coffee') {
+                rec = "Double Espresso Special & Tiramisu";
+                desc = "Əsl qəhvə həvəskarları üçün tünd espresso zənginliyi.";
+            }
+
+            titleEl.textContent = rec;
+            descEl.textContent = desc;
+
+            const waMsg = `Salam Səadət xanım! Saytdakı Əhval Testindən mənim üçün seçilən təkliyi rezerv etmək istəyirəm: ${rec}.`;
+            waBtn.href = `https://wa.me/994997480939?text=${encodeURIComponent(waMsg)}`;
+
+            resultDiv.classList.remove('hidden');
+        }
+
+        function resetQuiz() {
+            quizState = { step1: '', step2: '', step3: '' };
+            document.getElementById('quizResult').classList.add('hidden');
+            document.getElementById('quizStep1').classList.remove('hidden');
+        }
+
+        /* -------------------------------------------------------------
+           6. MENU FILTERING
+        ------------------------------------------------------------- */
+        function filterMenu(cat) {
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach(item => {
+                if (cat === 'all' || item.classList.contains(cat)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        /* -------------------------------------------------------------
+           7. WHATSAPP RESERVATION FORM
+        ------------------------------------------------------------- */
+        function handleReservation(e) {
+            e.preventDefault();
+            const name = document.getElementById('resName').value;
+            const phone = document.getElementById('resPhone').value;
+            const date = document.getElementById('resDate').value;
+            const time = document.getElementById('resTime').value;
+            const table = document.getElementById('resSelectedTable').value;
+
+            const message = `*ÇİNAR KAFE - MASA REZERVASİYASI*\n\n` +
+                            `👤 *Ad Soyad:* ${name}\n` +
+                            `📞 *Telefon:* ${phone}\n` +
+                            `📅 *Tarix:* ${date}\n` +
+                            `⏰ *Saat:* ${time}\n` +
+                            `🪑 *Seçilmiş Masa:* ${table}\n\n` +
+                            `Təsisçi Süleymanova Səadət üçün saytdan təqdim edildi.`;
+
+            window.open(`https://wa.me/994997480939?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        /* -------------------------------------------------------------
+           8. WEB AUDIO API RELAXING SOUND SYNTHESIZER
+        ------------------------------------------------------------- */
+        let audioCtx = null;
+        let isPlaying = false;
+        let noiseNode = null;
+
+        document.getElementById('audioBtn').addEventListener('click', function() {
+            const icon = document.getElementById('audioIcon');
+            
+            if (!isPlaying) {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * 0.04;
+                }
+
+                noiseNode = audioCtx.createBufferSource();
+                noiseNode.buffer = buffer;
+                noiseNode.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 350;
+
+                noiseNode.connect(filter);
+                filter.connect(audioCtx.destination);
+                noiseNode.start();
+
+                icon.className = "fa-solid fa-volume-high text-cinar-gold animate-pulse";
+                isPlaying = true;
+            } else {
+                if (noiseNode) noiseNode.stop();
+                icon.className = "fa-solid fa-volume-xmark";
+                isPlaying = false;
+            }
+        });
+
+        /* -------------------------------------------------------------
+           9. MOBILE MENU TOGGLE
+        ------------------------------------------------------------- */
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+    </script>
+</body>
+</html>
